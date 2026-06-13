@@ -1,0 +1,476 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English-American Literature Quiz</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        
+        :root {
+            --primary: #4f46e5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            color: #1e2937;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 
+                        0 8px 10px -6px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.95;
+            font-size: 16px;
+        }
+        
+        .quiz-body {
+            padding: 35px;
+        }
+        
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 15px;
+            color: #64748b;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4f46e5, #6366f1);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        
+        .question {
+            font-size: 21px;
+            line-height: 1.5;
+            margin-bottom: 32px;
+            font-weight: 500;
+            color: #1e2937;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .option {
+            padding: 18px 22px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            transform: translateX(10px);
+        }
+        
+        .option .letter {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: #e0e7ff;
+            color: var(--primary);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 600;
+            margin-right: 18px;
+            flex-shrink: 0;
+        }
+        
+        .option.correct {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        
+        .option.incorrect {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        
+        .feedback {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            font-size: 16.5px;
+            line-height: 1.6;
+        }
+        
+        .feedback.show {
+            display: block;
+        }
+        
+        .feedback.correct {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .feedback.incorrect {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+        }
+        
+        button {
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-next {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-next:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+        
+        .btn-prev {
+            background: #64748b;
+            color: white;
+        }
+        
+        .score-container {
+            display: none;
+            text-align: center;
+            padding: 50px 30px;
+        }
+        
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            border: 14px solid #10b981;
+            color: #10b981;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+        
+        .results {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+        
+        .restart-btn {
+            background: #64748b;
+            color: white;
+            margin-top: 30px;
+            padding: 14px 40px;
+            font-size: 17px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px;
+            color: #64748b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 English-American Literature Quiz</h1>
+            <p>Majorship Examination • 40 Questions</p>
+        </div>
+        
+        <div class="quiz-body" id="quiz-body">
+            <div class="progress">
+                <span>Question <strong id="current-q">1</strong> of 40</span>
+                <span>Score: <strong id="current-score">0</strong>/40</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            
+            <div class="question" id="question-text"></div>
+            
+            <div class="options" id="options-container"></div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="controls">
+                <button onclick="previousQuestion()" id="btn-prev" class="btn-prev" style="display: none;">← Previous</button>
+                <button onclick="nextQuestion()" class="btn-next" id="btn-next">Next Question →</button>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div class="score-container" id="score-screen">
+            <h2 style="margin-bottom: 20px; color: #1e2937;">Quiz Completed!</h2>
+            <div class="score-circle" id="score-circle">0%</div>
+            <div class="results" id="final-score"></div>
+            <p id="performance-msg" style="margin: 20px 0; font-size: 18px; color: #475569;"></p>
+            <button onclick="restartQuiz()" class="restart-btn">Restart Quiz</button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        Double-click an option to answer • All questions from the May 9, 2026 assessment
+    </div>
+
+    <script>
+        const quizData = [
+            {id:1, question:"What question can one ask to relate to the literature produced in the 20th century?", options:{A:"How can religion help foster morality in the community?",B:"What ritualistic dances can best narrate societal history?",C:"Why do people like to enjoy nature and the environment?",D:"Will science be able to enrich the lives of humanity?"}, correct:"D", explanation:"20th-century literature often explored science, technology, and modernity."},
+            {id:2, question:"Which of the following is NOT true about Romanticism?", options:{A:"I, II, and IV",B:"II and IV",C:"III only",D:"IV only"}, correct:"C", explanation:"Romanticism embraced emotion, imagination, and the mysterious."},
+            {id:3, question:"Which literary work presents a castaway's survival and is considered the first English novel?", options:{A:"A Tale of Two Cities",B:"Robinson Crusoe",C:"Pilgrim's Progress",D:"Pamela"}, correct:"B", explanation:"Robinson Crusoe by Daniel Defoe is widely considered the first English novel."},
+            {id:4, question:"Which among the following pertains to Metaphysical poetry?", options:{A:"Lighthearted celebration of carpe diem",B:"Strict imitation of Greek and Roman models",C:"Focus on social problems during industrialization",D:"Intellectual, philosophical treatment of love and mortality"}, correct:"D", explanation:"Metaphysical poetry features intellectual and philosophical themes."},
+            {id:5, question:"Mr. Baltazar assigned My Last Duchess to illustrate how a dramatic monologue reveals a speaker's hidden motives. What is revealed about the Duke in the poem?", options:{A:"His pride and jealousy",B:"His faith and devotion",C:"His innocence and love",D:"His humor and wit"}, correct:"A", explanation:"The Duke reveals his pride, jealousy, and controlling nature."},
+            {id:6, question:"Who wrote the foundational American document promoting liberty and equality?", options:{A:"Thomas Paine",B:"Thomas Jefferson",C:"Henry Longfellow",D:"Nathaniel Hawthorne"}, correct:"B", explanation:"Thomas Jefferson wrote the Declaration of Independence."},
+            {id:7, question:"Mr. De Guzman tells his students to analyze a poem that begins with \"Drink to me only with thine eyes.\" Which author's style is he teaching?", options:{A:"William Wordsworth",B:"Edmund Spenser",C:"Ben Jonson",D:"John Donne"}, correct:"C", explanation:"The poem is by Ben Jonson."},
+            {id:8, question:"If Christopher Columbus is to Epistola, then Captain John Smith is to ________.", options:{A:"The Scarlet Letter",B:"Common Sense",C:"Pocahontas",D:"Moby Dick"}, correct:"C", explanation:"Captain John Smith is famously linked with Pocahontas."},
+            {id:9, question:"Which among the following is NOT a feature of Modernism?", options:{A:"Emphasis on experimentation and symbolism",B:"Disillusionment after World War I",C:"Adherence to classical structure",D:"Fragmented narrative style"}, correct:"C", explanation:"Modernism rejected classical structures."},
+            {id:10, question:"In The Faerie Queene, knights represent virtues in a celebration of Queen Elizabeth I. What literary device is dominant?", options:{A:"Allegory",B:"Satire",C:"Simile",D:"Irony"}, correct:"A", explanation:"The Faerie Queene is a major allegorical work."},
+            {id:11, question:"Mrs. Lim encourages her students to write essays reflecting on honesty, success, and ambition — just like Francis Bacon. Bacon is known as the ________.", options:{A:"Father of English Comedy",B:"Father of English Essay",C:"Father of English Tragedy",D:"Bard of Avon"}, correct:"B", explanation:"Francis Bacon is the Father of the English Essay."},
+            {id:12, question:"Which poem captures the theme of choice and its consequences?", options:{A:"Daffodils",B:"A Psalm of Life",C:"My Last Duchess",D:"The Road Not Taken"}, correct:"D", explanation:"Robert Frost's 'The Road Not Taken' explores choices."},
+            {id:13, question:"Which among the following statements is TRUE about Romanticism in America?", options:{A:"I and IV",B:"II and III",C:"I and II",D:"II and IV"}, correct:"A", explanation:"American Romanticism emphasized self-expression, imagination, and nature."},
+            {id:14, question:"Ms. Agbayani assigns a paper comparing Macbeth and Hamlet. What theme links both plays?", options:{A:"Parental love and forgiveness",B:"Ambition and moral downfall",C:"Courtly romance and satire",D:"Supernatural redemption"}, correct:"B", explanation:"Both plays explore ambition and moral consequences."},
+            {id:15, question:"Teacher May reads the line \"Still achieving, still pursuing, learn to labor and to wait.\" She asks which American author wrote it.", options:{A:"Thomas Paine",B:"Nathaniel Hawthorne",C:"Ralph Waldo Emerson",D:"Henry Wadsworth Longfellow"}, correct:"D", explanation:"The line is from Henry Wadsworth Longfellow."},
+            {id:16, question:"If William Wordsworth : Daffodils, then Samuel Taylor Coleridge : ________.", options:{A:"Fire and Ice",B:"My Last Duchess",C:"The Road Not Taken",D:"The Rime of the Ancient Mariner"}, correct:"D", explanation:"The Rime of the Ancient Mariner is by Coleridge."},
+            {id:17, question:"Which among the following pertains to literature emphasizing reason, structure, and classical models of writing?", options:{A:"Transcendentalism",B:"Neoclassicism",C:"Romanticism",D:"Realism"}, correct:"B", explanation:"Neoclassicism valued reason and classical forms."},
+            {id:18, question:"At which period of English literature did the middle class rise to power juxtaposed to the monarchy?", options:{A:"17th century",B:"18th century",C:"19th century",D:"20th century"}, correct:"B", explanation:"The 18th century saw the rise of the middle class."},
+            {id:19, question:"Which of the following statements describe the Victorian Age?", options:{A:"II and IV",B:"I and IV",C:"I, II, and III",D:"I, II, III, and IV"}, correct:"C", explanation:"The Victorian Age featured social reform, industry, and moral values."},
+            {id:20, question:"In The Scarlet Letter, Hester Prynne bears a scarlet \"A\" for adultery. The symbol primarily reveals which theme?", options:{A:"Blind faith and devotion",B:"Greed and ambition",C:"Social hypocrisy",D:"Triumph of love"}, correct:"C", explanation:"The novel critiques social hypocrisy in Puritan society."},
+            {id:21, question:"In a classroom debate, a student argues that \"reason and science should prevail over superstition.\" Which literary period does this reflect?", options:{A:"Romantic Movement",B:"18th Century",C:"Renaissance",D:"Victorian Period"}, correct:"B", explanation:"The 18th century (Age of Reason) emphasized rationality."},
+            {id:22, question:"In The Canterbury Tales, pilgrims share stories on their journey to a shrine. What does the collection primarily reflect?", options:{A:"The moral values of medieval England",B:"The supremacy of the monarchy",C:"The decay of pagan traditions",D:"The glory of ancient Greece"}, correct:"A", explanation:"It reflects medieval English society and values."},
+            {id:23, question:"Sonnet 43 begins with \"How do I love thee? Let me count the ways.\" What does the speaker express?", options:{A:"The pain of unrequited affection",B:"The vanity of human emotion",C:"The struggle for forgiveness",D:"The constancy of true love"}, correct:"D", explanation:"It expresses deep and constant love."},
+            {id:24, question:"To whom is the poem that begins with \"How do I love thee? Let me count the ways\" dedicated?", options:{A:"Edmund Spenser",B:"William Wordsworth",C:"Elizabeth Browning",D:"Robert Browning"}, correct:"D", explanation:"Written by Elizabeth Barrett Browning to Robert Browning."},
+            {id:25, question:"Identify the works that reflect Romantic ideals.", options:{A:"I, II, and III",B:"II and IV",C:"III and IV",D:"I and II"}, correct:"D", explanation:"Daffodils and The Rime of the Ancient Mariner are Romantic works."},
+            {id:26, question:"Mrs. Ramos asks her students to compare The Canterbury Tales with modern social satire shows. What literary period does her lesson focus on?", options:{A:"Renaissance",B:"Middle English",C:"Romanticism",D:"Victorian Age"}, correct:"B", explanation:"The Canterbury Tales belongs to the Middle English period."},
+            {id:27, question:"Which among the following is NOT characteristic of the Renaissance Period?", options:{A:"Celebration of language",B:"Emphasis on human potential",C:"Focus on divine revelation",D:"Exploration of human emotions"}, correct:"C", explanation:"The Renaissance emphasized humanism over purely divine focus."},
+            {id:28, question:"Which among the following refers to the dramatized homily or sermon that personified moral abstractions such as Health and Death?", options:{A:"Mystery Play",B:"Miracle Play",C:"Morality Play",D:"Metrical Play"}, correct:"C", explanation:"Morality Plays personified virtues and vices."},
+            {id:29, question:"What year did the Second World War end?", options:{A:"1914",B:"1918",C:"1939",D:"1945"}, correct:"D", explanation:"World War II ended in 1945."},
+            {id:30, question:"Ms. Dizon reminds her students that \"carpe diem\" poetry encourages living in the moment. Which poet's work exemplifies this?", options:{A:"Edmund Spenser",B:"Richard Lovelace",C:"John Donne",D:"Ben Jonson"}, correct:"B", explanation:"Richard Lovelace is known for carpe diem poetry."},
+            {id:31, question:"Which of the following refers to Realism?", options:{A:"Emphasized imagination and idealized heroes",B:"Portrayed symbolism through dream visions",C:"Focused on everyday life and social truth",D:"Depicted divine miracles and allegories"}, correct:"C", explanation:"Realism focused on everyday life and social realities."},
+            {id:32, question:"Which refers to a long narrative poem celebrating heroic deeds and adventures, often involving a national hero?", options:{A:"Epic",B:"Ballad",C:"Ode",D:"Elegy"}, correct:"A", explanation:"An epic is a long heroic narrative poem."},
+            {id:33, question:"Which of the following pertains to the belief system that emphasized God's grace and salvation?", options:{A:"Transcendentalism",B:"Rationalism",C:"Puritanism",D:"Realism"}, correct:"C", explanation:"Puritanism emphasized God's grace and salvation."},
+            {id:34, question:"Mr. Reyes asks his 11th-grade class to read a poem that emphasizes human potential and experimentation in language; he assigns a sonnet written in iambic pentameter. Which period is he most likely addressing in class?", options:{A:"Old English",B:"Renaissance",C:"Romantic",D:"Victorian"}, correct:"B", explanation:"The Renaissance celebrated human potential and featured sonnets."},
+            {id:35, question:"In Macbeth, the protagonist's hunger for power leads to his downfall. What theme is most evident?", options:{A:"Patriotism",B:"Moral decay",C:"Parental duty",D:"Religious hypocrisy"}, correct:"B", explanation:"Macbeth explores moral decay through ambition."},
+            {id:36, question:"If Thomas Jefferson is to Declaration of Independence, then Thomas Paine is to ________.", options:{A:"The Red Badge of Courage",B:"Common Sense",C:"A Tell-Tale Heart",D:"Moby Dick"}, correct:"B", explanation:"Thomas Paine wrote Common Sense."},
+            {id:37, question:"Who coined the term \"The Period of the Lost Generation\" to describe the period of Modernism and experimentation in American literature?", options:{A:"Kate Chopin",B:"Gertrude Stein",C:"Robert Frost",D:"Ezra Pound"}, correct:"B", explanation:"Gertrude Stein coined 'Lost Generation'."},
+            {id:38, question:"If Beowulf is to Old English, then The Canterbury Tales is to ________.", options:{A:"Renaissance",B:"Middle English",C:"Romantic Movement",D:"17th Century"}, correct:"B", explanation:"The Canterbury Tales is Middle English."},
+            {id:39, question:"Which literary movement emphasized individual intuition and the spiritual connection between humans and nature?", options:{A:"Transcendentalism",B:"Neoclassicism",C:"Classicism",D:"Realism"}, correct:"A", explanation:"Transcendentalism emphasized intuition and nature."},
+            {id:40, question:"Which of the following literary themes became central during the Affluent but Alienated 1950s in American literature?", options:{A:"Joy of exploration",B:"Triumph of human faith",C:"Wealth and rebirth after war",D:"Loneliness despite prosperity"}, correct:"D", explanation:"1950s literature often explored alienation despite material prosperity."}
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = new Array(quizData.length).fill(false);
+        let audioContext;
+
+        function initAudio() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        function playCorrectSound() {
+            initAudio();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 800;
+            gain.gain.value = 0.3;
+            osc.connect(gain).connect(audioContext.destination);
+            osc.start();
+            setTimeout(() => osc.stop(), 180);
+            setTimeout(() => {
+                const osc2 = audioContext.createOscillator();
+                osc2.frequency.value = 1200;
+                osc2.connect(gain).connect(audioContext.destination);
+                osc2.start();
+                setTimeout(() => osc2.stop(), 250);
+            }, 100);
+        }
+
+        function playIncorrectSound() {
+            initAudio();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.value = 280;
+            gain.gain.value = 0.25;
+            osc.connect(gain).connect(audioContext.destination);
+            osc.start();
+            setTimeout(() => osc.stop(), 450);
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestionIndex];
+            document.getElementById('current-q').textContent = q.id;
+            document.getElementById('question-text').innerHTML = `<strong>${q.id}.</strong> ${q.question}`;
+            
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            
+            Object.keys(q.options).forEach(letter => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerHTML = `<span class="letter">${letter}</span> ${q.options[letter]}`;
+                div.dataset.letter = letter;
+                div.addEventListener('dblclick', () => handleSelection(letter, div));
+                container.appendChild(div);
+            });
+            
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('btn-prev').style.display = currentQuestionIndex > 0 ? 'block' : 'none';
+            updateProgress();
+        }
+
+        function handleSelection(selected, element) {
+            if (answered[currentQuestionIndex]) return;
+            answered[currentQuestionIndex] = true;
+            
+            const q = quizData[currentQuestionIndex];
+            const isCorrect = selected === q.correct;
+            
+            if (isCorrect) {
+                score++;
+                playCorrectSound();
+            } else {
+                playIncorrectSound();
+            }
+            
+            // Highlight options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt.dataset.letter === q.correct) {
+                    opt.classList.add('correct');
+                }
+                if (opt.dataset.letter === selected && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect'}</strong><br><br><strong>Explanation:</strong> ${q.explanation}`;
+            feedback.classList.add('show', isCorrect ? 'correct' : 'incorrect');
+            
+            document.getElementById('current-score').textContent = score;
+        }
+
+        function updateProgress() {
+            const percent = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('progress-fill').style.width = percent + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-body').style.display = 'none';
+            const screen = document.getElementById('score-screen');
+            screen.style.display = 'block';
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('score-circle').textContent = percentage + '%';
+            document.getElementById('final-score').innerHTML = `You got <strong>${score}</strong> out of <strong>40</strong>`;
+            
+            const msg = document.getElementById('performance-msg');
+            if (percentage >= 90) msg.textContent = "Excellent! You're a literature master! 🎉";
+            else if (percentage >= 75) msg.textContent = "Very Good! Strong performance!";
+            else if (percentage >= 60) msg.textContent = "Good job! Keep improving.";
+            else msg.textContent = "Keep studying! Practice makes perfect.";
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answered = new Array(quizData.length).fill(false);
+            document.getElementById('quiz-body').style.display = 'block';
+            document.getElementById('score-screen').style.display = 'none';
+            document.getElementById('current-score').textContent = '0';
+            loadQuestion();
+        }
+
+        // Start the quiz
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
+```
